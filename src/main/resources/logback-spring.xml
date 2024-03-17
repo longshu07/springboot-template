@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 从spring配置文件中获取的数据 -->
+    <springProperty scope="context" name="LOG_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path"/>
+
+    <!--  总文件大小  -->
+    <property name="LOG_FILE_MAX_SIZE" value="512MB" />
+    <property name="LOG_FILE_MAX_HISTORY" value="30" />
+
+    <!-- appender是configuration的子节点，是负责写日志的组件。 -->
+    <!-- ConsoleAppender：把日志输出到控制台 -->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，${LOG_NAME}项目名称,%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [${LOG_NAME}] %-5level %logger{50} - %msg %n</pattern>
+            <!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--  输出debug日志  -->
+    <!-- RollingFileAppender：滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
+    <appender name="debugLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，${LOG_NAME}项目名称, %-5level：级别从左显示5个字符宽度. %msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [${LOG_NAME}] %-5level %logger{50} - %msg %n</pattern>
+            <!-- 使用UTF-8，不要使用GBK，否则会中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <!--滚动策略-->
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--按时间保存日志 修改格式可以按小时、按天、月来保存  %i满了之后的数字分组显示 -->
+            <fileNamePattern>${LOG_PATH}/${LOG_NAME}-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--保存时长 每产生一个日志文件，该日志文件的保存期限为N天 -->
+            <MaxHistory>${LOG_FILE_MAX_HISTORY}</MaxHistory>
+            <!-- 日志归档总大小超过这个数字会删除之前老的  -->
+            <totalSizeCap>${LOG_FILE_MAX_SIZE}</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB，测试时可改成1KB看效果，当满了1kb之后，就会生成1.log,2.log的形式输出日志文件 -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <!--  输出INFO级别日志  -->
+    <!--  RollingFileAppender:滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件  -->
+    <appender name="infoLog"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，${LOG_NAME}项目名称, %-5level：级别从左显示5个字符宽度. %msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [${LOG_NAME}] %-5level %logger{50} - %msg %n</pattern>
+            <!-- 使用UTF-8，不要使用GBK，否则会中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--按时间保存日志 修改格式可以按小时、按天、月来保存  %i满了之后的数字分组显示 -->
+            <fileNamePattern>${LOG_PATH}/${LOG_NAME}-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--保存时长 每产生一个日志文件，该日志文件的保存期限为N天 -->
+            <MaxHistory>${LOG_FILE_MAX_HISTORY}</MaxHistory>
+            <!-- 日志归档总大小超过这个数字会删除之前老的  -->
+            <totalSizeCap>${LOG_FILE_MAX_SIZE}</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB，测试时可改成1KB看效果，当满了1kb之后，就会生成1.log,2.log的形式输出日志文件 -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--  输出ERROR级别日志  -->
+    <!--  RollingFileAppender:滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件  -->
+    <appender name="errorLog"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>error</level>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，${LOG_NAME}项目名称, %-5level：级别从左显示5个字符宽度. %msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [${LOG_NAME}] %-5level %logger{50} - %msg %n</pattern>
+            <!-- 使用UTF-8，不要使用GBK，否则会中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--按时间保存日志 修改格式可以按小时、按天、月来保存  %i满了之后的数字分组显示 -->
+            <fileNamePattern>${LOG_PATH}/${LOG_NAME}-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--保存时长 每产生一个日志文件，该日志文件的保存期限为N天 -->
+            <MaxHistory>${LOG_FILE_MAX_HISTORY}</MaxHistory>
+            <!-- 日志归档总大小超过这个数字会删除之前老的  -->
+            <totalSizeCap>${LOG_FILE_MAX_SIZE}</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB，测试时可改成1KB看效果，当满了1kb之后，就会生成1.log,2.log的形式输出日志文件 -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="consoleLog"/>
+            <appender-ref ref="debugLog"/>
+            <appender-ref ref="infoLog"/>
+            <appender-ref ref="errorLog"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="debugLog"/>
+            <appender-ref ref="consoleLog"/>
+            <appender-ref ref="infoLog"/>
+            <appender-ref ref="errorLog"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="consoleLog"/>
+            <appender-ref ref="debugLog"/>
+            <appender-ref ref="infoLog"/>
+            <appender-ref ref="errorLog"/>
+        </root>
+    </springProfile>
+</configuration>
