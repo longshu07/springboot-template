@@ -45,11 +45,18 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.2.20</version>
         </dependency>
-<!--        &lt;!&ndash;    commons-pool2依赖    &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-pool2</artifactId>-->
-<!--        </dependency>-->
+        <!--    commons-pool2依赖    -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <!-- redisson依赖 https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.29.0</version>
+        </dependency>
 
 
         <dependency>

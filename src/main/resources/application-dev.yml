@@ -1,0 +1,110 @@
+server:
+    # 项目启动端口
+    port: 8080
+
+
+mybatis:
+    configuration:
+        #开启控制台打印sql
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        # mybatis 下划线转驼峰配置,两者都可以
+        map-underscore-to-camel-case: true
+    #配置mapper对应的xml映射
+    mapper-locations: classpath:mapper/*.xml
+    #配置数据库对应的实体类路径
+    type-aliases-package: cn.longshu.springboottemplate.entity
+
+spring:
+    datasource:
+        # 数据库驱动
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        # zeroDateTimeBehavior=convertToNull把日期为0的转换为null处理。GMT+8是东八区。useSSL=false：直接通过账号密码连接。allowMultiQueries=true：可以在sql语句后携带分号，实现多语句执行可以执行批处理，同时发出多个SQL语句。
+        #useAffectedRows:useAffectedRows=true时, update返回值为受影响行数;useAffectedRows=false时, update返回值为where条件匹配的行数.
+        url: jdbc:mysql://localhost:3306/springboot-template?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+        username: root
+        password: 1234567
+        type: com.alibaba.druid.pool.DruidDataSource
+        # 设置数据库的连接池为德鲁伊
+        druid:
+            # asyncInit是1.1.4中新增加的配置，如果有initialSize数量较多时，打开会加快应用启动时间
+            asyncInit: true
+            # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+            filters: stat,wall,config
+            # 初始化大小，最小，最大
+            initial-size: 5
+            min-idle: 3
+            max-active: 20
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒，下面是：1分钟
+            time-between-eviction-runs-millis: 60000
+            # 配置获取连接等待超时的时间
+            max-wait: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒，下面是：5分钟
+            min-evictable-idle-time-millis: 300000
+            # 打开PSCache，并且指定每个连接上PSCache的大小
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+    # redis配置
+    redis:
+        database: 0
+        host: localhost
+        #密码为空不填
+        password:
+        port: 6379
+        timeout: 3000
+        # 使用lettuce作为客户端
+        lettuce:
+            # redis的线程池配置
+            pool:
+                max-active: 32
+                max-idle: 16
+                min-idle: 8
+
+
+        # redisson客户端配置
+        redisson:
+            config: |
+                # 单机模式
+                singleServerConfig:
+                  # 连接空闲超时，单位：毫秒
+                  idleConnectionTimeout: 10000
+                  # 连接超时，单位：毫秒
+                  connectTimeout: 10000
+                  # 命令等待超时，单位：毫秒 默认3000
+                  timeout: 3000
+                # 命令失败重试次数
+                  retryAttempts: 3
+                # 命令重试发送时间间隔，单位：毫秒
+                  retryInterval: 1500
+                # 无密码则设置 null
+                  password: null
+                # 单个连接最大订阅数量
+                  subscriptionsPerConnection: 5
+                  # 客户端名称
+                  clientName: null
+                  # redis 节点地址
+                  address: "redis://127.0.0.1:6379"
+                  # 从节点发布和订阅连接的最小空闲连接数
+                  subscriptionConnectionMinimumIdleSize: 1
+                  # 发布和订阅连接池大小
+                  subscriptionConnectionPoolSize: 50
+                  # 发布和订阅连接的最小空闲连接数
+                  connectionMinimumIdleSize: 24
+                  # 发布和订阅连接池大小
+                  connectionPoolSize: 64
+                  # 数据库编号
+                  database: 0
+                  # DNS监测时间间隔，单位：毫秒  在启用该功能以后，Redisson将会监测DNS的变化情况
+                  dnsMonitoringInterval: 5000
+                threads: 16
+                nettyThreads: 32
+                codec: !<org.redisson.codec.Kryo5Codec> {}
+                transportMode: "NIO"
+
+#SpringBoot采用的默认的日志框架就是slf4j+logback,所以无需额外导入依赖
+logging:
+    file:
+        # 文件日志输出位置
+        path: log/${spring.application.name}
+    level:
+        # # 根目录（项目整体）打印的日志级别
+        root: info

@@ -1,0 +1,11 @@
+server:
+    servlet:
+        # 项目访问路径前置
+        context-path: /springboot-template
+spring:
+    application:
+        # 项目名称
+        name: springboot-template
+    profiles:
+        # 激活环境
+        active: dev
